@@ -59,15 +59,21 @@ $if(graphics)$
 % are scaled down if they would overflow the margins.
 \makeatletter
 \def\ScaleIfNeeded{%
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
+  \ifdim\Gin@nat@width>\linewidth%
+    \linewidth\relax%
   \else
-    \Gin@nat@width
+    \Gin@nat@width\relax%
   \fi
 }
+\AtBeginDocument%
+ {%
+  \let\Oldincludegraphics\includegraphics%
+  \gdef\includegraphics%
+   {%
+    \@ifnextchar[{\Oldincludegraphics}{\Oldincludegraphics[width=\ScaleIfNeeded]}%
+   }%
+ }%
 \makeatother
-\let\Oldincludegraphics\includegraphics
-\renewcommand{\includegraphics}[2][]{\Oldincludegraphics[width=\ScaleIfNeeded]{#2}}
 $endif$
 
 % Comment these out if you don't want a slide with just the
