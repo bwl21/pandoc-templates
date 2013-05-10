@@ -71,18 +71,21 @@ $if(graphics)$
 % are scaled down if they would overflow the margins.
 \makeatletter
 \def\ScaleIfNeeded{%
-  \ifdim\Gin@nat@width>\linewidth
-    \linewidth
+  \ifdim\Gin@nat@width>\linewidth%
+    \linewidth\relax%
   \else
-    \Gin@nat@width
+    \Gin@nat@width\relax%
   \fi
 }
+\AtBeginDocument%
+ {%
+  \let\Oldincludegraphics\includegraphics%
+  \gdef\includegraphics%
+   {%
+    \@ifnextchar[{\Oldincludegraphics}{\Oldincludegraphics[width=\ScaleIfNeeded]}%
+   }%
+ }%
 \makeatother
-\let\Oldincludegraphics\includegraphics
-{%
- \catcode`\@=11\relax%
- \gdef\includegraphics{\@ifnextchar[{\Oldincludegraphics}{\Oldincludegraphics[width=\ScaleIfNeeded]}}%
-}%
 $endif$
 \ifxetex
   \usepackage[setpagesize=false, % page size defined by xetex
